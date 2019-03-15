@@ -1,4 +1,5 @@
 import math
+from Image import Image
 
 class Entity():
     """General code for things that appear in the world."""
@@ -34,8 +35,18 @@ class Entity():
             return True
         return False
 
+    def setImage(self, image):
+        """Sets the image
+        image -- Type Image
+        """
+        if not isinstance(image, Image):
+            raise TypeError("Only accepts objects of type Image")
+        self.image = image
+
     def getImage(self, scale):
-        """Returns the image associated with the entity."""
+        """Returns the image associated with the entity.
+        scale -- A double representation of the scaling factor
+        """
         if self.image == None:
             return None
 

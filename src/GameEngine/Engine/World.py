@@ -1,5 +1,4 @@
-from Entity import Entity
-from ActiveEntity import ActiveEntity
+from Entity import Entity, ActiveEntity
 
 from PyQt5.QtGui import QPainter, QPen, QBrush, QColor, QImage
 from PyQt5.QtWidgets import QWidget, QApplication
