@@ -8,7 +8,7 @@ class World():
 
     def __init__(self, engine):
         self.engine = engine
-        self.entity_list = []
+        self.entities = set()
         self.screen = Entity()
         self.screen.x = 0
         self.screen.y = 0
@@ -25,31 +25,37 @@ class World():
 
     def drawScreen(self, qp):
         """Draws all entities to the screen.\n
-        qp -- a QPainter.
+        qp -- a QPainter
         """
         qp.drawImage(QPoint(0,0), self.background)
 
-        for e in self.entity_list:
-            if e.image is not None and e.isInRange(self.screen, 0):
-                qp.drawImage(QPoint(int(e.x * self.engine.scale),
-                                    int(e.y * self.engine.scale)),
-                                    e.getImage(self.engine.scale))
+        for e in self.entities:
+            if e.isNeighbor(self.screen):
+                if e.image:        
+                    qp.drawImage(QPoint(int(e.x * self.engine.scale),
+                                        int(e.y * self.engine.scale)),
+                                        e.getImage(self.engine.scale))
+                elif e.text:
+                    qp.drawText(QPoint(int(e.x * self.engine.scale),
+                                       int(e.y * self.engine.scale)), e.text)
 
     def runEntities(self):
-        """Calls the physics() and run() methods."""
-        for e in self.entity_list:
+        """Calls the physics() and run() methods.
+        """
+        for e in self.entities:
             if isinstance(e, ActiveEntity):
                 e.physics()
                 e.run()
 
-        if self.tracked_entity is not None:
+        if self.tracked_entity:
             self.screen.x = (self.tracked_entity.x + self.tracked_entity.width
                              / 2 - self.screen.width / 2)
             self.screen.y = (self.tracked_entity.y + self.tracked_entity.height
                              / 2 - self.screen.height / 2)
 
     def run(self):
-        """User implementation of run method."""
+        """User implementation of run method.
+        """
         pass
 
     def addEntity(self, entity, x, y):
@@ -59,39 +65,59 @@ class World():
         """
         if not isinstance(entity, Entity):
             raise TypeError("Only accepts objects of type Entity")
+
         entity.x = x
         entity.y = y
         entity.world = self
-        self.entity_list.append(entity)
+        self.entities.add(entity)
 
     def removeEntity(self, entity):
-        """Remove the designated entity from the entity list."""
-        self.entity_list.remove(entity)
+        """Remove the designated entity from the entity list.\n
+        entity -- type Entity
+        """
+        self.entities.remove(entity)
 
     def autoFocus(self, entity):
-        """Keeps the given entity on the screen"""
+        """Keeps the given entity on the screen.\n
+        entity -- type Entity
+        """
         self.tracked_entity = entity
 
     def manualFocus(self):
-        """Ends autoFocus"""
+        """Ends autoFocus.
+        """
         self.tracked_entity = None
 
     def mouseX(self):
-        """Get mouse X position"""
-        return QCursor.pos().x()
+        """Get mouse X position.
+        """
+        return QCursor.pos().x() / self.engine.scale
 
     def mouseY(self):
-        """Get mouse Y position"""
-        return QCursor.pos().y()
+        """Get mouse Y position.
+        """
+        return QCursor.pos().y() / self.engine.scale
 
     def isKeyPressed(self, key):
-        """Check if a key is pressed\n
-        key -- An integer key ID. Use Engine.key(keyName) to convert to key ID.
+        """Check if a key is pressed.\n
+        key -- An integer key ID. Use Engine.key(keyName) to convert to key ID
         """
         return (key in self.engine.pressed_keys)
 
-    def mousePressed(self, key=0x00000001 ):
+    def mousePressed(self, key=0x00000001):
+        """unknown
+        """
         return (key in self.engine.mouse_keys)
 
-    def mouseReleased(self, key=0x00000001 ):
+    def mouseReleased(self, key=0x00000001):
+        """unknown
+        """
         return (key in self.engine.mouse_released)
+
+    def mouseOver(self, entity):
+        """Is the mouse over the entity?
+        """
+        return (self.mouseX() <= entity.x + entity.width and
+                self.mouseX() >= entity.x and
+                self.mouseY() <= entity.y + entity.height and
+                self.mouseY() >= entity.y)

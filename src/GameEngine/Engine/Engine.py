@@ -9,35 +9,43 @@ from PyQt5.QtWidgets import QApplication, QWidget
 from World import World
 
 class EngineInit():
-
+    """To be implemented in... tbh idk... STEPHEN!!!
+    """
     def __init__(self):
         pass
 
     def startWorld(self, ex):
+        """lol who knows... STEPHEN!!!
+        """
         return World(ex)
 
 
 class Engine(QWidget):
-
+    """Abstraction of PyQT. Contains the run thread, displays content, and manages I.O.
+    """
     class RunThread(QThread):
+        """Class to facilitate threading.
+        """
         def __init__(self, engine):
             QtCore.QThread.__init__(self) 
             self.engine = engine
             self.running = True
         
         def run(self):
+            """The run thread.
+            """
             while self.running:
                 start_time = time.time()
 
-                while len(self.engine.mouse_released) != 0:
+                while self.engine.mouse_released:
                     self.engine.mouse_released.pop()
 
-                while len(self.engine.mouse_up_instant) != 0:
+                while self.engine.mouse_up_instant:
                     key = self.engine.mouse_up_instant.pop()
                     self.engine.mouse_keys.discard(key)
                     self.engine.mouse_released.add(key)
 
-                if self.engine.active_world is not None:
+                if self.engine.active_world:
                     self.engine.active_world.runEntities()
                     self.engine.active_world.run()
                 
@@ -52,7 +60,7 @@ class Engine(QWidget):
         self.screen_height = QScreen.size(QApplication.primaryScreen()).height()
         self.setFixedSize(self.screen_width, self.screen_height)
         #set scale based on relation to 1080p
-        self.scale = self.screen_width/1080
+        self.scale = self.screen_height/1080
         self.showFullScreen()
 
         self.active_world = None
@@ -60,34 +68,49 @@ class Engine(QWidget):
         self.mouse_keys = set()
         self.mouse_released = set()
         self.mouse_up_instant = set()
-        
+
         self.run_thread = self.RunThread(self)
         self.run_thread.start()
 
     def paintEvent(self, event):
+        """unknown\n
+        event -- this isn't even used lol
+        """
         qp = QPainter()
         qp.begin(self)
 
-        if self.active_world is not None:
-            self.active_world.drawScreen(qp)
+        self.active_world and self.active_world.drawScreen(qp)
         
         qp.end()
 
     def keyPressEvent(self, event):
+        """lazy\n
+        event -- 
+        """
         self.pressed_keys.add(event.key())
 
     def keyReleaseEvent(self, event):
+        """lazy\n
+        event -- 
+        """
         self.pressed_keys.discard(event.key())
 
     def mousePressEvent(self, event):
+        """lazy\n
+        event -- 
+        """
         self.mouse_keys.add(event.button())
 
     def mouseReleaseEvent(self, event):
+        """lazy\n
+        event -- 
+        """
         self.mouse_up_instant.add(event.button())
-
-
+    
     @staticmethod
     def start(main):
+        """unknown
+        """
         app = QApplication(sys.argv)
         ex = Engine()
         ex.active_world = main.startWorld(ex)
@@ -95,6 +118,9 @@ class Engine(QWidget):
 
     @staticmethod
     def key(keyName):
+        """Returns the code for a given key.\n
+        keyName -- Name of the key desired
+        """
         if len(keyName) == 1:
             return ord(keyName.upper())
         elif keyName == "left":
@@ -122,6 +148,9 @@ class Engine(QWidget):
 
     @staticmethod
     def mouseKey(keyName):
+        """Returns the code for a given mouse key.\n
+        keyName -- Name of the mouse key
+        """
         if keyName == "left":
             return 0x00000001
         if keyName == "right":
