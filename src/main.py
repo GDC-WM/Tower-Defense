@@ -6,9 +6,18 @@ from MainMenu import MainMenu
 
 class Main(EngineInit):
 
+    def __init__(self, world):
+        self.world = world
+
     def startWorld(self, ex):
-        return MainMenu(ex)
+        return self.world(ex)
 
 if __name__ == "__main__":
-    main = Main()
-    Engine.start(main)
+    world = MainMenu
+
+    for i in range(1, len(sys.argv[1:])):
+        if sys.argv[i] == "-w":
+            i+=1
+            world = eval(sys.argv[i])
+
+    Engine.start(Main(world))
