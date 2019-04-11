@@ -81,14 +81,19 @@ class Entity():
 
         return neighbors
 
-    def setImage(self, image):
+    def setImage(self, image, width=0, height=0):
         """Sets the image\n
-        image -- Type Image
+        image -- Type Image\n
+        width -- A positive integer for width. Default is zero where it will be ignored.
+        height -- A positive integer for height. Default is zero where it will be ignored.
         """
         if not isinstance(image, Image):
             raise TypeError("Only accepts objects of type Image")
 
         self.image = image
+        if height > 0 and width > 0:
+            self.image.setSize(height, width)
+
         self.width = image.getWidth()
         self.height = image.getHeight()
 
