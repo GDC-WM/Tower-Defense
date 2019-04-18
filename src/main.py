@@ -19,5 +19,9 @@ if __name__ == "__main__":
         if sys.argv[i] == "-w":
             i+=1
             world = eval(sys.argv[i])
+        
+        elif sys.argv[i] == "-l":
+            i+=1
+            world = Level(int(sys.argv[i]))
 
     Engine.start(Main(world))

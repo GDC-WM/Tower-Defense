@@ -1,11 +1,16 @@
-from GameEngine import Engine.Entity.Entity
+from GameEngine.Engine.Entity import Entity
 
 class Button(Entity):
 
-    def __init__(self, text):
-        """
-        text -- a string to display on the button.
+    def __init__(self):
+        """Create a button
         """
         super().__init__()
-        self.image = "replace this with an image"
-        self.text = text
+        self.clicked_image = self.image
+    
+    def isDown(self):
+        pass
+
+    def run():
+        if(self.world):
+            pass

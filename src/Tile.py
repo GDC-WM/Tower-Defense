@@ -7,9 +7,10 @@ class Tile(Entity):
         """
         super().__init__()
         self.open = False       #Can a defense be placed here?
-    
+        self.TILE_LENGTH = self.width = self.height = 75
     @staticmethod
     def getTyleType(color):
+        
         pass #set of if statements for returning which it is
 
 class Path(Tile):

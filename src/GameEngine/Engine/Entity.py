@@ -23,7 +23,7 @@ class Entity():
         entity -- type Entity
         """
         if not isinstance(entity, Entity):
-            raise TypeError("Only accepts objects of type Entity")
+            pass#raise TypeError("Only accepts objects of type Entity")
 
         return (self.x <= entity.x + entity.width and
                 self.x + self.width >= entity.x and
@@ -88,7 +88,7 @@ class Entity():
         height -- A positive integer for height. Default is zero where it will be ignored.
         """
         if not isinstance(image, Image):
-            raise TypeError("Only accepts objects of type Image")
+            pass#raise TypeError("Only accepts objects of type Image")
 
         self.image = image
         if height > 0 and width > 0:

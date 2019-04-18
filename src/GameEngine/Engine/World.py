@@ -64,7 +64,7 @@ class World():
         y -- y-coordinate of the entity
         """
         if not isinstance(entity, Entity):
-            raise TypeError("Only accepts objects of type Entity")
+            pass#raise TypeError("Only accepts objects of type Entity")
 
         entity.x = x
         entity.y = y
